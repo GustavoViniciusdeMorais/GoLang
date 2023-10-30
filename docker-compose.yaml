@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+    gogus:
+        build:
+            context: .
+            dockerfile: ubuntu.dockerfile
+        container_name: gostudies
+        ports:
+            - 8082:9990
+            - 80:80
+        volumes:
+            - ./:/go
+        networks:
+          go-studies-network:
+            ipv4_address: 172.16.0.2
+
+networks:
+    go-studies-network:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+                - subnet: "172.16.0.0/16"
