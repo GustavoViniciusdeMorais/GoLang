@@ -4,4 +4,5 @@ FROM gustavovinicius/golang:latest
 # RUN apt update
 # RUN apt install g++
 # RUN apt install build-essential
+RUN export PATH=$PATH:/usr/local/go/bin
 ENTRYPOINT ["tail", "-f", "/dev/null"]
