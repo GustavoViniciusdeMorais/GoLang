@@ -26,3 +26,30 @@ go work init
 go version
 go run first.go
 ```
+
+### Talk is easy, show me the code
+```go
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"os"
+)
+
+func gus(name string) {
+	fmt.Printf("Entered text was %s", name)
+}
+
+func main() {
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print("Enter text:")
+	input, err := reader.ReadString('\n')
+
+	if err != nil {
+		panic("error")
+	}
+
+	gus(input)
+}
+```
