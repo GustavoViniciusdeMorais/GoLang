@@ -22,6 +22,12 @@ cd project/path/
 go work init
 ```
 
+### Build go mod to import at other file
+```sh
+cd directory
+go mot init github.com/GustavoViniciusdeMorais/directory
+```
+
 ```sh
 go version
 go run first.go
