@@ -2,6 +2,8 @@
 
 Created by: Gustavo Morais
 
+[GoLang Certificate](https://www.linkedin.com/learning/certificates/f75363e5c176cbb7695329ac0f68aebb6997b8dc520d0490e53eb440f67fe548)
+
 ### Troble shooting go commands
 ```sh
 export PATH=$PATH:/usr/local/go/bin

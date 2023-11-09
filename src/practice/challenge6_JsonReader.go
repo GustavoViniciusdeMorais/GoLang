@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
 )
 
 func main() {
@@ -17,20 +16,11 @@ func main() {
 	fmt.Println("GoLangGo!", result)
 }
 
+// professor solution
 func getCartFromJson(jsonString string) []cartItem {
 	var cart []cartItem
-
-	decoder := json.NewDecoder(strings.NewReader(jsonString))
-	_, err := decoder.Token()
+	err := json.Unmarshal([]byte(jsonString), &cart)
 	checkError(err)
-
-	var catItem cartItem
-	for decoder.More() {
-		err := decoder.Decode(&catItem)
-		checkError(err)
-		cart = append(cart, catItem)
-	}
-
 	return cart
 }
 
@@ -40,8 +30,11 @@ func checkError(err error) {
 	}
 }
 
+/* At this solution the struct attributes are
+* directely mapped to the json attributes
+ */
 type cartItem struct {
-	Name     string
-	Price    float64
-	Quantity int
+	Name     string  `json:"name"`
+	Price    float64 `json:"price"`
+	Quantity int     `json:"quantity"`
 }
