@@ -29,7 +29,7 @@ go version
 go run first.go
 ```
 
-### Talk is easy, show me the code
+### Simple example
 ```go
 package main
 
