@@ -4,6 +4,12 @@ Created by: Gustavo Morais
 
 [GoLang Certificate](https://www.linkedin.com/learning/certificates/f75363e5c176cbb7695329ac0f68aebb6997b8dc520d0490e53eb440f67fe548)
 
+### Libraries
+- [HTTP Router](https://github.com/gorilla/mux)
+  - go install github.com/gorilla/mux@latest
+- [SQLite](https://github.com/mattn/go-sqlite3)
+  - go install github.com/mattn/go-sqlite3@latest
+
 ### Troble shooting go commands
 ```sh
 export PATH=$PATH:/usr/local/go/bin
