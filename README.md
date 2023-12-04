@@ -10,6 +10,9 @@ Created by: Gustavo Morais
 - [SQLite](https://github.com/mattn/go-sqlite3)
   - go install github.com/mattn/go-sqlite3@latest
 
+### Build module doc example
+- [Module Doc](./CreatingModule.md)
+
 ### Troble shooting go commands
 ```sh
 export PATH=$PATH:/usr/local/go/bin
