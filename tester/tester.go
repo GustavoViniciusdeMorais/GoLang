@@ -7,5 +7,6 @@ import (
 
 func main() {
 	practice.Test()
-	backend.Run("localhost:9003")
+	// backend.Run("localhost:9003")
+	backend.TestDbConnection()
 }
