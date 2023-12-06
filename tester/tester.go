@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"example.com/backend"
 	"example.com/practice"
 )
@@ -8,5 +10,9 @@ import (
 func main() {
 	practice.Test()
 	// backend.Run("localhost:9003")
-	backend.TestDbConnection()
+	db, err := backend.DbConnection()
+	if err != nil {
+		log.Fatal(err)
+	}
+	backend.CreateTableProducts(db)
 }

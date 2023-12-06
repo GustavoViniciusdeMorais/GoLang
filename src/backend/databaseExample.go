@@ -17,13 +17,11 @@ type Product struct {
 
 type DB struct{}
 
-func TestDbConnection() {
+func DbConnection() (*sql.DB, error) {
 	db, err := sql.Open("sqlite3", ":memory:")
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	defer db.Close()
 
 	var version string
 	err = db.QueryRow("SELECT SQLITE_VERSION()").Scan(&version)
@@ -31,5 +29,33 @@ func TestDbConnection() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(version)
+
+	fmt.Println("SQLite version ", version)
+	return db, err
+}
+
+func CloseDbConnection(db *sql.DB) bool {
+	error := db.Close()
+
+	if error != nil {
+		log.Fatal(error)
+	}
+	return true
+}
+
+func CreateTableProducts(db *sql.DB) bool {
+	statement := `
+		DROP TABLE IF EXISTS products;
+		CREATE TABLE products (id INTEGER PRIMARY KEY, name TEXT, inventory INT, price REAL);
+	`
+
+	_, err := db.Exec(statement)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Table products created")
+
+	return true
 }
