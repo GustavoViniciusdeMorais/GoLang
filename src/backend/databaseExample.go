@@ -18,7 +18,7 @@ type Product struct {
 type DB struct{}
 
 func DbConnection() (*sql.DB, error) {
-	db, err := sql.Open("sqlite3", ":memory:")
+	db, err := sql.Open("sqlite3", "test.db")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -57,5 +57,47 @@ func CreateTableProducts(db *sql.DB) bool {
 
 	fmt.Println("Table products created")
 
+	return true
+}
+
+func CreateSampleData(db *sql.DB) bool {
+	statement := `
+		INSERT INTO products (id , name, inventory, price ) 
+		VALUES
+		(1, 'test1', 1, 1.1),
+		(2, 'test2', 2, 2.1);
+	`
+
+	_, err := db.Exec(statement)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Table products populated")
+
+	return true
+}
+
+func ListProducts(db *sql.DB) bool {
+	rows, err := db.Query("SELECT * FROM products")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var id int64
+		var name string
+		var inventory int64
+		var price float64
+		err = rows.Scan(&id, &name, &inventory, &price)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Printf("%d %s %d %f\n", id, name, inventory, price)
+	}
 	return true
 }

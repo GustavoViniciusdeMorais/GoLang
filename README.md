@@ -14,7 +14,8 @@ Created by: Gustavo Morais
 
 ### Build module doc example
 - [Module Doc](./CreatingModule.md)
-
+### Database SQLite Example
+- [SQLite example](./tester/DB.md)
 ### Troble shooting go commands
 ```sh
 export PATH=$PATH:/usr/local/go/bin
