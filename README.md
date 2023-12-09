@@ -41,6 +41,13 @@ go version
 go run first.go
 ```
 
+### Import libraries
+To import libraries, acces the module folder
+Then type:
+```sh
+sudo go mod tidy
+```
+
 ### Simple example
 ```go
 package main
