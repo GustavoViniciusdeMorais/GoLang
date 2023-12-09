@@ -80,7 +80,7 @@ func CreateSampleData(db *sql.DB) bool {
 }
 
 func ListProducts(db *sql.DB) bool {
-	rows, err := db.Query("SELECT * FROM products")
+	rows, err := db.Query("SELECT id, name, inventory, price FROM products")
 
 	if err != nil {
 		log.Fatal(err)
@@ -89,15 +89,13 @@ func ListProducts(db *sql.DB) bool {
 	defer rows.Close()
 
 	for rows.Next() {
-		var id int64
-		var name string
-		var inventory int64
-		var price float64
-		err = rows.Scan(&id, &name, &inventory, &price)
+		var p Product
+
+		err = rows.Scan(&p.Id, &p.Name, &p.Inventory, &p.Price)
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Printf("%d %s %d %f\n", id, name, inventory, price)
+		fmt.Printf("%d %s %d %f\n", p.Id, p.Name, p.Inventory, p.Price)
 	}
 	return true
 }
