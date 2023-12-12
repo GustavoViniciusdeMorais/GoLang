@@ -1,3 +1,2 @@
 go 1.18
-use ./practice
-use ./src/backend
+use ./handlers
