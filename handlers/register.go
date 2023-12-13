@@ -1,9 +1,5 @@
 package handlers
 
-import (
-	"fmt"
-)
-
-func Register() {
-	fmt.Println("Inside register")
+func Register() string {
+	return "Inside register\n"
 }

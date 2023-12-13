@@ -51,3 +51,8 @@ func main() {
 	practice.Test()
 }
 ```
+### Request routes example
+```sh
+curl -X GET localhost:9003/users
+curl -X POST localhost:9003/register
+```

@@ -1,2 +1,2 @@
 go 1.18
-use ./handlers
+use ./api

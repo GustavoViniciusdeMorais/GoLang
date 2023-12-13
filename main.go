@@ -1,9 +1,9 @@
 package main
 
 import (
-	"example.com/handlers"
+	"example.com/api"
 )
 
 func main() {
-	handlers.Register()
+	api.Run()
 }
