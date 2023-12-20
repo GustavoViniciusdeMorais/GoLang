@@ -8,13 +8,6 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-type Product struct {
-	Id        int64
-	Name      string
-	Inventory int64
-	Price     float64
-}
-
 type DB struct{}
 
 func DbConnection() (*sql.DB, error) {
