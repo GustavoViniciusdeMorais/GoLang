@@ -35,3 +35,8 @@ func getProducts(db *sql.DB) ([]Product, error) {
 
 	return products, nil
 }
+
+func (p *Product) getProduct(db *sql.DB) error {
+	return db.QueryRow("SELECT id, name, inventory, price FROM products WHERE id = ?", p.Id).
+		Scan(&p.Id, &p.Name, &p.Inventory, &p.Price)
+}

@@ -1,12 +1,19 @@
 package backend
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 )
+
+type App struct {
+	DB    *sql.DB
+	Port  string
+	Route *mux.Router
+}
 
 func getRequest(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "GET Request\n")
