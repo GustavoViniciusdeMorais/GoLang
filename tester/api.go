@@ -5,5 +5,7 @@ import (
 )
 
 func main() {
-	backend.Run("localhost:9003")
+	var app backend.App
+	app.Initialize()
+	app.Run()
 }

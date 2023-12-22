@@ -10,9 +10,9 @@ import (
 )
 
 type App struct {
-	DB    *sql.DB
-	Port  string
-	Route *mux.Router
+	DB     *sql.DB
+	Port   string
+	Router *mux.Router
 }
 
 func getRequest(w http.ResponseWriter, r *http.Request) {
@@ -27,13 +27,22 @@ func deleteRequest(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "DELETE Request\n")
 }
 
-func Run(addr string) {
-	r := mux.NewRouter()
-	r.HandleFunc("/products", getRequest).Methods("GET")
-	r.HandleFunc("/products", postRequest).Methods("POST")
-	r.HandleFunc("/products", deleteRequest).Methods("DELETE")
+func (a *App) Initialize() {
+	db, err := DbConnection()
+	if err != nil {
+		log.Fatal(err)
+	}
+	CreateTableProducts(db)
+	CreateSampleData(db)
 
-	http.Handle("/products", r)
-	fmt.Println("Server at localhost:9003")
-	log.Fatal(http.ListenAndServe(":9003", nil))
+	a.DB = db
+	a.Port = ":9003"
+	a.Router = mux.NewRouter()
+}
+
+func (a *App) Run() {
+	a.Router.HandleFunc("/", getRequest).Methods("GET")
+
+	fmt.Printf("Server at localhost:%v\n", a.Port)
+	log.Fatal(http.ListenAndServe(a.Port, a.Router))
 }
