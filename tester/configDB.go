@@ -15,5 +15,7 @@ func main() {
 		log.Fatal(err)
 	}
 	backend.CreateTableProducts(db)
+	backend.CreateOrderTables(db)
 	backend.CreateSampleData(db)
+	backend.CreateOrdersSampleData(db)
 }

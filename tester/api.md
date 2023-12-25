@@ -12,5 +12,5 @@ sudo curl -X DELETE localhost:9003/products
 
 sudo curl -X GET localhost:9003/products/1
 
-sudo curl -d '{"id":7,"name":"test","inventory":"test","price":13}' -X POST localhost:9003/products
+sudo curl -d '{"name":"test","inventory":10,"price":13}' -X POST localhost:9003/products
 ```

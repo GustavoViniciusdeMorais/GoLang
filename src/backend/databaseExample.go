@@ -53,6 +53,31 @@ func CreateTableProducts(db *sql.DB) bool {
 	return true
 }
 
+func CreateOrderTables(db *sql.DB) bool {
+	statement := `
+		DROP TABLE IF EXISTS orders;
+		CREATE TABLE orders (id INTEGER PRIMARY KEY AUTOINCREMENT, customerName TEXT, total REAL);
+		DROP TABLE IF EXISTS orderItems;
+		CREATE TABLE orderItems (
+			orderId INTEGER,
+			productId INTEGER,
+			quantity INTEGER,
+			FOREIGN KEY(orderId) REFERENCES orders(id),
+			FOREIGN KEY(productId) REFERENCES products(id)
+		)
+	`
+
+	_, err := db.Exec(statement)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Table orders and orderItems created")
+
+	return true
+}
+
 func CreateSampleData(db *sql.DB) bool {
 	statement := `
 		INSERT INTO products (id , name, inventory, price ) 
@@ -68,6 +93,29 @@ func CreateSampleData(db *sql.DB) bool {
 	}
 
 	fmt.Println("Table products populated")
+
+	return true
+}
+
+func CreateOrdersSampleData(db *sql.DB) bool {
+	statement := `
+		INSERT INTO orders (customerName, total) 
+		VALUES
+		('test1', 1.1),
+		('test2', 2.1);
+		INSERT INTO orderItems (orderId, productId, quantity) 
+		VALUES
+		(1, 1, 1),
+		(2, 2, 2);
+	`
+
+	_, err := db.Exec(statement)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Tables orders populated")
 
 	return true
 }

@@ -69,11 +69,22 @@ func (a *App) createProduct(w http.ResponseWriter, r *http.Request) {
 	respondWithJson(w, http.StatusOK, p)
 }
 
+func (a *App) allOrders(w http.ResponseWriter, r *http.Request) {
+	orders, err := getOrders(a.DB)
+	if err != nil {
+		fmt.Printf("getOrders error: %s\n", err.Error())
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+	}
+	respondWithJson(w, http.StatusOK, orders)
+}
+
 func (a *App) Run() {
 	a.Router.HandleFunc("/", getRequest).Methods("GET")
 	a.Router.HandleFunc("/products", a.allProducts).Methods("GET")
 	a.Router.HandleFunc("/products/{id}", a.fetchProduct).Methods("GET")
 	a.Router.HandleFunc("/products", a.createProduct).Methods("POST")
+
+	a.Router.HandleFunc("/orders", a.allOrders).Methods("GET")
 
 	fmt.Printf("Server at localhost:%v\n", a.Port)
 	log.Fatal(http.ListenAndServe(a.Port, a.Router))
