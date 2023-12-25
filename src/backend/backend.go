@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
@@ -55,10 +56,24 @@ func (a *App) fetchProduct(w http.ResponseWriter, r *http.Request) {
 	respondWithJson(w, http.StatusOK, p)
 }
 
+func (a *App) createProduct(w http.ResponseWriter, r *http.Request) {
+	reqBody, _ := ioutil.ReadAll(r.Body)
+	var p Product
+	json.Unmarshal(reqBody, &p)
+
+	err := p.createProduct(a.DB)
+	if err != nil {
+		fmt.Printf("createProduct error: %s\n", err.Error())
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+	}
+	respondWithJson(w, http.StatusOK, p)
+}
+
 func (a *App) Run() {
 	a.Router.HandleFunc("/", getRequest).Methods("GET")
 	a.Router.HandleFunc("/products", a.allProducts).Methods("GET")
 	a.Router.HandleFunc("/products/{id}", a.fetchProduct).Methods("GET")
+	a.Router.HandleFunc("/products", a.createProduct).Methods("POST")
 
 	fmt.Printf("Server at localhost:%v\n", a.Port)
 	log.Fatal(http.ListenAndServe(a.Port, a.Router))
