@@ -36,8 +36,31 @@ func getOrders(db *sql.DB) ([]Order, error) {
 		if err != nil {
 			return nil, err
 		}
+		err = o.getOrderItems(db)
+		if err != nil {
+			return nil, err
+		}
 		orders = append(orders, o)
 	}
 
 	return orders, nil
+}
+
+func (order *Order) getOrderItems(db *sql.DB) error {
+	rows, err := db.
+		Query("SELECT orderId, productId, quantity FROM orderItems WHERE orderId = ?", order.Id)
+	if err != nil {
+		return err
+	}
+	orderItems := []OrderItem{}
+	for rows.Next() {
+		var item OrderItem
+		err := rows.Scan(&item.OrderId, &item.ProductId, &item.Quantity)
+		if err != nil {
+			orderItems = append(orderItems, item)
+		}
+	}
+	order.Items = orderItems
+
+	return nil
 }
