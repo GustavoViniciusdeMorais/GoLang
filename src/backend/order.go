@@ -46,6 +46,17 @@ func getOrders(db *sql.DB) ([]Order, error) {
 	return orders, nil
 }
 
+func (order *Order) getOrder(db *sql.DB) error {
+	db.QueryRow("SELECT id, customerName, total FROM orders WHERE id = ?", order.Id).
+		Scan(&order.Id, &order.CustomerName, &order.Total)
+	err := order.getOrderItems(db)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (order *Order) getOrderItems(db *sql.DB) error {
 	rows, err := db.
 		Query("SELECT orderId, productId, quantity FROM orderItems WHERE orderId = ?", order.Id)
@@ -62,5 +73,26 @@ func (order *Order) getOrderItems(db *sql.DB) error {
 	}
 	order.Items = orderItems
 
+	return nil
+}
+
+func (order *Order) createOrder(db *sql.DB) error {
+	statement := `
+		INSERT INTO orders (customerName, total)
+		VALUES
+		(?, ?);
+	`
+
+	res, err := db.Exec(statement, order.CustomerName, order.Total)
+	if err != nil {
+		return err
+	}
+
+	id, err := res.LastInsertId()
+	if err != nil {
+		return err
+	}
+
+	order.Id = int(id)
 	return nil
 }

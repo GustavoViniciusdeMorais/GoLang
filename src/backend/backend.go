@@ -78,6 +78,20 @@ func (a *App) allOrders(w http.ResponseWriter, r *http.Request) {
 	respondWithJson(w, http.StatusOK, orders)
 }
 
+func (a *App) fetchOrder(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	id := params["id"]
+
+	var order Order
+	order.Id, _ = strconv.Atoi(id)
+	err := order.getOrder(a.DB)
+	if err != nil {
+		fmt.Printf("fetchOrder error: %s\n", err.Error())
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+	}
+	respondWithJson(w, http.StatusOK, order)
+}
+
 func (a *App) Run() {
 	a.Router.HandleFunc("/", getRequest).Methods("GET")
 	a.Router.HandleFunc("/products", a.allProducts).Methods("GET")
@@ -85,6 +99,7 @@ func (a *App) Run() {
 	a.Router.HandleFunc("/products", a.createProduct).Methods("POST")
 
 	a.Router.HandleFunc("/orders", a.allOrders).Methods("GET")
+	a.Router.HandleFunc("/orders/{id}", a.fetchOrder).Methods("GET")
 
 	fmt.Printf("Server at localhost:%v\n", a.Port)
 	log.Fatal(http.ListenAndServe(a.Port, a.Router))
