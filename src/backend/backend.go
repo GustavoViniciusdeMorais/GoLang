@@ -92,6 +92,31 @@ func (a *App) fetchOrder(w http.ResponseWriter, r *http.Request) {
 	respondWithJson(w, http.StatusOK, order)
 }
 
+func (a *App) createOrder(w http.ResponseWriter, r *http.Request) {
+	reqBody, _ := ioutil.ReadAll(r.Body)
+	var order Order
+	json.Unmarshal(reqBody, &order)
+
+	err := order.createOrder(a.DB)
+	if err != nil {
+		fmt.Printf("createOrder error: %s\n", err.Error())
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+	}
+
+	for _, item := range order.Items {
+		var orderItem OrderItem
+		orderItem = item
+		orderItem.OrderId = order.Id
+		err := orderItem.createOrderItem(a.DB)
+		if err != nil {
+			fmt.Printf("createOrder error: %s\n", err.Error())
+			respondWithError(w, http.StatusInternalServerError, err.Error())
+		}
+	}
+
+	respondWithJson(w, http.StatusOK, order)
+}
+
 func (a *App) Run() {
 	a.Router.HandleFunc("/", getRequest).Methods("GET")
 	a.Router.HandleFunc("/products", a.allProducts).Methods("GET")

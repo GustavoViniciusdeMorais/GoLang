@@ -96,3 +96,16 @@ func (order *Order) createOrder(db *sql.DB) error {
 	order.Id = int(id)
 	return nil
 }
+
+func (orderItem *OrderItem) createOrderItem(db *sql.DB) error {
+	statement := `
+		INSERT INTO orderItems (orderId, productId, quantity)
+		VALUES
+		(?, ?, ?);
+	`
+	_, err := db.Exec(statement, orderItem.OrderId, orderItem.ProductId, orderItem.Quantity)
+	if err != nil {
+		return err
+	}
+	return nil
+}
