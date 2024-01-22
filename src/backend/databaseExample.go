@@ -36,7 +36,7 @@ func CloseDbConnection(db *sql.DB) bool {
 	return true
 }
 
-func CreateTableProducts(db *sql.DB) bool {
+func CreateTableProducts(db *sql.DB) (bool, error) {
 	statement := `
 		DROP TABLE IF EXISTS products;
 		CREATE TABLE products (id INTEGER PRIMARY KEY, name TEXT, inventory INT, price REAL);
@@ -44,13 +44,11 @@ func CreateTableProducts(db *sql.DB) bool {
 
 	_, err := db.Exec(statement)
 
-	if err != nil {
-		log.Fatal(err)
+	if err == nil {
+		fmt.Println("Table products created")
 	}
 
-	fmt.Println("Table products created")
-
-	return true
+	return true, err
 }
 
 func CreateOrderTables(db *sql.DB) bool {
