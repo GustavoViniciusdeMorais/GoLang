@@ -51,6 +51,17 @@ func CreateTableProducts(db *sql.DB) (bool, error) {
 	return true, err
 }
 
+func ClearProductTable(db *sql.DB) (bool, error) {
+	_, err := db.Exec("DELETE FROM products")
+	_, err = db.Exec("DELEET FROM sqlite_sequence WHERE name = 'products'")
+
+	if err == nil {
+		fmt.Println("Table products created")
+	}
+
+	return true, err
+}
+
 func CreateOrderTables(db *sql.DB) bool {
 	statement := `
 		DROP TABLE IF EXISTS orders;
