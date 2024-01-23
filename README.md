@@ -77,4 +77,5 @@ func main() {
 
 ### Tutorials
 - [API Test](./tester/api.md)
+- [Go Tests](./tester/test.md)
 - [DB config](./tester/DB.md)
