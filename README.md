@@ -74,3 +74,7 @@ func main() {
 	gus(input)
 }
 ```
+
+### Tutorials
+- [API Test](./tester/api.md)
+- [DB config](./tester/DB.md)
