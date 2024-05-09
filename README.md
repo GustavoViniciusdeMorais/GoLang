@@ -1,9 +1,21 @@
-# GoLang
+# DDD API
 
-Created by: Gustavo Morais
+```sh
+```
 
-[GoLang Certificate](https://www.linkedin.com/learning/certificates/f75363e5c176cbb7695329ac0f68aebb6997b8dc520d0490e53eb440f67fe548)
+### Libraries
+- [HTTP Router](https://github.com/gorilla/mux)
+  - go get github.com/gorilla/mux@latest
+- [GoLang SQLite](https://github.com/mattn/go-sqlite3)
+  - go get github.com/mattn/go-sqlite3@latest
+- [SQLite](https://www.sqlite.org/docs.html)
+	- sudo apt install sqlite3
+	- [Sqlite3 Doc](https://github.com/GustavoViniciusdeMorais/Database_Studies/tree/sqlite)
 
+### Build module doc example
+- [Module Doc](./CreatingModule.md)
+### Database SQLite Example
+- [SQLite example](./DB.md)
 ### Troble shooting go commands
 ```sh
 export PATH=$PATH:/usr/local/go/bin
@@ -29,29 +41,9 @@ go version
 go run first.go
 ```
 
-### Simple example
-```go
-package main
-
-import (
-	"bufio"
-	"fmt"
-	"os"
-)
-
-func gus(name string) {
-	fmt.Printf("Entered text was %s", name)
-}
-
-func main() {
-	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("Enter text:")
-	input, err := reader.ReadString('\n')
-
-	if err != nil {
-		panic("error")
-	}
-
-	gus(input)
-}
+```sh
+cd src
+go mod init
+go get github.com/gorilla/mux@latest
+go get github.com/mattn/go-sqlite3@latest
 ```
