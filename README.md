@@ -20,7 +20,8 @@
 ```sh
 export PATH=$PATH:/usr/local/go/bin
 ```
-
+### API Test
+- [API](./api.md)
 ### Other go installation
 ```sh
 sudo apt install golang-go -y
