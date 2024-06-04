@@ -12,6 +12,8 @@
 	- sudo apt install sqlite3
 	- [Sqlite3 Doc](https://github.com/GustavoViniciusdeMorais/Database_Studies/tree/sqlite)
 
+### JWT with Redis
+- [Jwt with Redis](./auth_jwt_redis.md)
 ### Build module doc example
 - [Module Doc](./CreatingModule.md)
 ### Database SQLite Example
