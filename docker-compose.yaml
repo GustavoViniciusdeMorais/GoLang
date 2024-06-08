@@ -1,16 +1,16 @@
 version: '3'
 
 services:
-    gogus:
+    api:
         build:
             context: .
             dockerfile: ubuntu.dockerfile
-        container_name: gostudies
+        container_name: api
         ports:
             - 8082:9990
             - 80:80
         volumes:
-            - ./:/go
+            - ./:/var/www/html
         networks:
           go-studies-network:
             ipv4_address: 172.16.0.2
