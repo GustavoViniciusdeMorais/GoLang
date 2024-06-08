@@ -9,6 +9,10 @@ Created by: Gustavo Morais
 export PATH=$PATH:/usr/local/go/bin
 ```
 
+### Tutorials
+- [NGINX Proxy](./goWithNginx.md)
+- [NGINX CGI](./goWithCgiNginx.md)
+
 ### Other go installation
 ```sh
 sudo apt install golang-go -y
