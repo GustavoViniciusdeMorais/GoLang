@@ -30,15 +30,21 @@ go run main.go
 
 The server will start on port 8080.
 
-### NGINX Configuration (nginx.conf)
+### NGINX Configuration
 
-Below is an example of a simple NGINX configuration file to proxy requests to the Golang API. 
+1. Edit the NGINX configuration file:
+
+```sh
+sudo nano /etc/nginx/sites-available/api.gustavo.services
+```
+
+2. Add the following content to the file:
 
 ```nginx
 server {
     listen 80;
 
-    server_name localhost;
+    server_name api.gustavo.services;
 
     location / {
         proxy_pass http://127.0.0.1:8080;
@@ -50,29 +56,27 @@ server {
 }
 ```
 
-Save this configuration as `nginx.conf`. Make sure to adjust the `server_name` directive to match your domain name or use `localhost` if you're testing locally.
+3. Create a symbolic link to enable the site:
 
-### Running NGINX
+```sh
+sudo ln -s /etc/nginx/sites-available/api.gustavo.services /etc/nginx/sites-enabled/
+```
 
-1. Install NGINX if you haven't already. You can usually do this using your package manager. For example, on Ubuntu, you can use:
+4. Test the NGINX configuration for syntax errors:
 
-    ```sh
-    sudo apt update
-    sudo apt install nginx
-    ```
+```sh
+sudo nginx -t
+```
 
-2. Replace the default NGINX configuration file with your custom configuration. On many systems, the default configuration file is located at `/etc/nginx/nginx.conf`.
+5. Restart NGINX to apply the new configuration:
 
-    ```sh
-    sudo cp nginx.conf /etc/nginx/nginx.conf
-    ```
+```sh
+sudo systemctl restart nginx
+```
 
-3. Restart NGINX to apply the new configuration:
+### DNS Configuration
 
-    ```sh
-    sudo systemctl restart nginx
-    ```
-
+Make sure that your domain `api.gustavo.services` is pointed to the IP address of your NGINX server. This step is usually done through your domain registrar's DNS management interface.
 ### Testing the Setup
 
 With the Go server running and NGINX configured and restarted, you should be able to make a request to the NGINX server on port 80, which will proxy the request to the Go server on port 8080.
