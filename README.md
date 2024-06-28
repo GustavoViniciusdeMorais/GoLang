@@ -13,6 +13,7 @@ export PATH=$PATH:/usr/local/go/bin
 - [NGINX Proxy](./goWithNginx.md)
 - [NGINX CGI](./goWithCgiNginx.md)
 - [Hexagonal API Example](./hexagonalApi.md)
+- [Simple API Example](./apiExample.md)
 
 ### Other go installation
 ```sh
