@@ -1,10 +1,10 @@
-package http
+package myhttp
 
 import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/GustavoViniciusdeMorais/api/internal/core/service"
+	"example.com/internal/core/service"
 )
 
 type UserHandler struct {

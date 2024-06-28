@@ -1,6 +1,6 @@
 package service
 
-import "github.com/GustavoViniciusdeMorais/api/internal/core/domain"
+import "example.com/internal/core/domain"
 
 type UserService struct{}
 

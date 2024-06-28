@@ -1,4 +1,4 @@
-module github.com/GustavoViniciusdeMorais/api
+module example.com
 
 go 1.18
 
