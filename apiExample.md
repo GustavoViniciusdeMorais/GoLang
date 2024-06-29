@@ -1,5 +1,3 @@
-Sure! Here’s the updated tutorial with the module path `example.com`:
-
 # Setting Up a Simple Go API Project with a Single `go.mod` File
 
 This tutorial will guide you through setting up a simple Go API project with the following directory structure:
