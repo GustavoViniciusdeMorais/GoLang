@@ -1,6 +1,7 @@
 # Auth API
 
 ```
+export PATH=$PATH:/usr/local/go/bin
 ```
 
 ### Libraries
