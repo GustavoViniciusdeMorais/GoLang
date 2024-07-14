@@ -4,14 +4,14 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"example.com/internal/core/service"
+	"example.com/internal/core/port"
 )
 
 type UserHandler struct {
-	userService *service.UserService
+	userService port.UserService
 }
 
-func NewUserHandler(userService *service.UserService) *UserHandler {
+func NewUserHandler(userService port.UserService) *UserHandler {
 	return &UserHandler{userService: userService}
 }
 

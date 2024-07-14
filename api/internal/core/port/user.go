@@ -8,3 +8,10 @@ type UserRepository interface {
 	FindAll() ([]*domain.User, error)
 	Delete(id uint) error
 }
+
+type UserService interface {
+	CreateUser(name, email string) error
+	GetUserByID(id uint) (*domain.User, error)
+	ListUsers() ([]*domain.User, error)
+	DeleteUser(id uint) error
+}
