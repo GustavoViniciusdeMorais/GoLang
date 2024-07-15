@@ -21,3 +21,15 @@ func NewDB() *DB {
 		SSLMode:  "disable",
 	}
 }
+
+type HTTP struct {
+	Url  string
+	Port string
+}
+
+func NewHTTP() *HTTP {
+	return &HTTP{
+		Url:  os.Getenv("HTTP_URL"),
+		Port: os.Getenv("HTTP_PORT"),
+	}
+}

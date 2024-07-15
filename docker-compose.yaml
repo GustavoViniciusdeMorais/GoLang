@@ -17,6 +17,8 @@ services:
             - POSTGRES_PASSWORD=postgres
             - POSTGRES_HOST=postgres
             - POSTGRES_PORT=5432
+            - HTTP_URL=http://localhost
+            - HTTP_PORT=8080
         networks:
           go-studies-network:
             ipv4_address: 172.16.0.2
