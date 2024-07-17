@@ -1,34 +1,43 @@
 package myhttp
 
 import (
-	"example.com/internal/adapter/config"
+	"log"
+	"net/http"
 
-	"github.com/gin-gonic/gin"
+	"example.com/internal/core/domain"
+	"github.com/labstack/echo/v4"
 )
 
-type Route struct {
-	Engine *gin.Engine
+type EchoServer struct {
+	echo *echo.Echo
 }
 
-func NewRouter(
-	config *config.HTTP,
-	handler *UserHandler,
-) (*Route, error) {
-	router := gin.New()
-
-	v1 := router.Group("/api/v1")
-	{
-		user := v1.Group("/users")
-		{
-			user.GET("", handler.GetUsers)
-		}
+func NewServer() *EchoServer {
+	server := &EchoServer{
+		echo: echo.New(),
 	}
-
-	return &Route{
-		Engine: router,
-	}, nil
+	return server
 }
 
-func (r *Route) Start(listenAddr string) error {
-	return r.Engine.Run(listenAddr)
+func (s *EchoServer) RegisterRoutes(
+	userHandler *UserHandler,
+) error {
+	s.echo.GET("/liveness", s.Liveness)
+
+	ug := s.echo.Group("/users")
+	ug.GET("", userHandler.GetUsers)
+
+	return nil
+}
+
+func (s *EchoServer) Start(listenAddr string) error {
+	if err := s.echo.Start(listenAddr); err != nil && err != http.ErrServerClosed {
+		log.Fatalf("server shutdown occurred: %s", err)
+		return err
+	}
+	return nil
+}
+
+func (s *EchoServer) Liveness(ctx echo.Context) error {
+	return ctx.JSON(http.StatusOK, domain.Health{Status: "OK"})
 }

@@ -1,10 +1,10 @@
 package myhttp
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"example.com/internal/core/port"
+	"github.com/labstack/echo/v4"
 )
 
 type UserHandler struct {
@@ -15,14 +15,12 @@ func NewUserHandler(userService port.UserService) *UserHandler {
 	return &UserHandler{userService: userService}
 }
 
-func (h *UserHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) GetUsers(ctx echo.Context) error {
 	users, error := h.userService.ListUsers()
 
 	if error != nil {
-		http.Error(w, error.Error(), http.StatusInternalServerError)
-		return
+		return ctx.JSON(http.StatusInternalServerError, error)
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(users)
+	return ctx.JSON(http.StatusOK, users)
 }

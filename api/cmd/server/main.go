@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
-	"os"
 
 	"example.com/internal/adapter/config"
 	"example.com/internal/adapter/handler/myhttp"
@@ -17,28 +15,25 @@ import (
 func main() {
 
 	configDB := config.NewDB()
-	congiHost := config.NewHTTP()
+	congigHost := config.NewHTTP()
 
-	db, err := postgres.NewPostgresDB(*configDB)
+	postgresDB, err := postgres.NewPostgresDB(*configDB)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// Migrate the schema
-	db.AutoMigrate(&domain.User{})
+	postgresDB.DB.AutoMigrate(&domain.User{})
 
-	userRepo := repository.NewUserGormRepository(db)
+	userRepo := repository.NewUserGormRepository(postgresDB.DB)
 	userService := service.NewUserService(userRepo)
 	userHandler := myhttp.NewUserHandler(userService)
 
-	listenAddr := fmt.Sprintf("%s:%s", config.HTTP.Url, config.HTTP.Port)
-	router := myhttp.NewRouter(userHandler)
-
-	err = router.Serve(listenAddr)
-	if err != nil {
-		os.Exit(1)
+	server := myhttp.NewServer()
+	if err := server.RegisterRoutes(userHandler); err != nil {
+		log.Fatal(err)
 	}
-
-	log.Println("Starting server on :8080")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	if err := server.Start(fmt.Sprintf("0.0.0.0:%s", congigHost.Port)); err != nil {
+		log.Fatal(err)
+	}
 }
