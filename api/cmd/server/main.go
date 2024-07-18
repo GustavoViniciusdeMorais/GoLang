@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 
@@ -8,19 +9,30 @@ import (
 	"example.com/internal/adapter/handler/myhttp"
 	"example.com/internal/adapter/storage/postgres"
 	"example.com/internal/adapter/storage/postgres/repository"
+	"example.com/internal/adapter/storage/redis"
 	"example.com/internal/core/domain"
 	"example.com/internal/core/service"
 )
 
 func main() {
 
-	configDB := config.NewDB()
-	congigHost := config.NewHTTP()
+	ctx := context.Background()
 
-	postgresDB, err := postgres.NewPostgresDB(*configDB)
+	config, err := config.New()
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	postgresDB, err := postgres.NewPostgresDB(*config.DB)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	cache, err := redis.New(ctx, config.Redis)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer cache.Close()
 
 	// Migrate the schema
 	postgresDB.DB.AutoMigrate(&domain.User{})
@@ -33,7 +45,7 @@ func main() {
 	if err := server.RegisterRoutes(userHandler); err != nil {
 		log.Fatal(err)
 	}
-	if err := server.Start(fmt.Sprintf("0.0.0.0:%s", congigHost.Port)); err != nil {
+	if err := server.Start(fmt.Sprintf("0.0.0.0:%s", config.HTTP.Port)); err != nil {
 		log.Fatal(err)
 	}
 }
