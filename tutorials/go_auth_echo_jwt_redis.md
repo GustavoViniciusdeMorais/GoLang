@@ -1,7 +1,7 @@
 # Golang Auth with Echo Jwt and Redis
 
 ### 1. `main.go`
-This file will initialize the Echo server, connect to the database and Redis, and set up the routes.
+This file initializes the Echo server, connects to the database and Redis, and sets up the routes.
 
 ```go
 package main
@@ -55,7 +55,7 @@ func main() {
 ```
 
 ### 2. `routes.go`
-This file will define the routes for the application.
+This file defines the routes for the application and sets up the custom JWT validation middleware for the `/users` route group.
 
 ```go
 package routes
@@ -64,7 +64,6 @@ import (
 	"github.com/go-redis/redis/v8"
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 
 	"your_project/auth"
 )
@@ -74,14 +73,15 @@ func SetupRoutes(e *echo.Echo, db *gorm.DB, rdb *redis.Client) {
 
 	e.POST("/login", authHandler.Login)
 
-	r := e.Group("/welcome")
-	r.Use(middleware.JWT([]byte("secret")))
-	r.GET("", authHandler.Welcome)
+	// Users group with custom JWT validation middleware
+	users := e.Group("/users")
+	users.Use(auth.JWTMiddleware(rdb))
+	users.GET("/welcome", authHandler.Welcome)
 }
 ```
 
 ### 3. `auth_handler.go`
-This file will handle the authentication routes.
+This file handles the authentication routes.
 
 ```go
 package auth
@@ -91,7 +91,7 @@ import (
 	"time"
 
 	"github.com/go-redis/redis/v8"
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/net/context"
@@ -160,13 +160,63 @@ func (h *Handler) Welcome(c echo.Context) error {
 }
 ```
 
-### 4. `auth_service.go`
-This file is not strictly necessary for this simple example, but it could be used to add additional services or business logic related to authentication.
+### 4. `auth_middleware.go`
+This file contains the custom JWT validation middleware.
 
 ```go
 package auth
 
-// Add any additional authentication services here
+import (
+	"net/http"
+	"strings"
+
+	"github.com/go-redis/redis/v8"
+	"github.com/golang-jwt/jwt/v4"
+	"github.com/labstack/echo/v4"
+	"golang.org/x/net/context"
+)
+
+func JWTMiddleware(rdb *redis.Client) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			authHeader := c.Request().Header.Get("Authorization")
+			if authHeader == "" {
+				return c.JSON(http.StatusUnauthorized, map[string]string{"error": "Missing or invalid token"})
+			}
+
+			// Extract the token from the header
+			tokenString := strings.TrimPrefix(authHeader, "Bearer ")
+			if tokenString == authHeader {
+				return c.JSON(http.StatusUnauthorized, map[string]string{"error": "Invalid token format"})
+			}
+
+			// Parse the token
+			token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+				return []byte("secret"), nil
+			})
+			if err != nil {
+				return c.JSON(http.StatusUnauthorized, map[string]string{"error": "Invalid token"})
+			}
+
+			if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+				username := claims["name"].(string)
+
+				// Get the token from Redis and compare
+				ctx := context.Background()
+				savedToken, err := rdb.Get(ctx, username).Result()
+				if err != nil || savedToken != tokenString {
+					return c.JSON(http.StatusUnauthorized, map[string]string{"error": "Invalid or expired token"})
+				}
+
+				// Set the user in the context
+				c.Set("user", token)
+				return next(c)
+			}
+
+			return c.JSON(http.StatusUnauthorized, map[string]string{"error": "Invalid token"})
+		}
+	}
+}
 ```
 
 ### Directory Structure
@@ -177,6 +227,7 @@ your_project/
 |-- routes.go
 |-- auth/
     |-- auth_handler.go
+    |-- auth_middleware.go
     |-- auth_service.go
 ```
 
@@ -186,9 +237,10 @@ your_project/
 ```go
 require (
     github.com/go-redis/redis/v8 v8.11.5
-    github.com/golang-jwt/jwt v3.2.1+incompatible
+    github.com/golang-jwt/jwt/v4 v4.4.3
     github.com/jinzhu/gorm v1.9.16
-    github.com/labstack/echo/v4 v4.6.0
+    github.com/labstack/echo/v4 v4.9.0
+    github.com/labstack/echo-jwt/v4 v4.0.0
     gorm.io/driver/sqlite v1.2.3
     gorm.io/gorm v1.21.15
 )
@@ -198,4 +250,4 @@ require (
 
 3. Remember to hash passwords in a real application to avoid storing plain text passwords.
 
-This setup provides a basic structure for handling JWT authentication with Golang using the Echo framework, Redis, and GORM.
+This setup provides a basic structure for handling JWT authentication with Golang using the Echo framework, Redis, and GORM, along with a custom middleware for JWT validation.
