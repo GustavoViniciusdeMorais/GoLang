@@ -7,6 +7,7 @@ type UserRepository interface {
 	FindByID(id uint) (*domain.User, error)
 	FindAll() ([]*domain.User, error)
 	Delete(id uint) error
+	Login(email string, password string) (*domain.User, error)
 }
 
 type UserService interface {

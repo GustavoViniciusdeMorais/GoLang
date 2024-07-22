@@ -18,10 +18,9 @@ func (r *Redis) Set(ctx context.Context, key string, value []byte, ttl time.Dura
 	return r.client.Set(ctx, key, value, ttl).Err()
 }
 
-func (r *Redis) Get(ctx context.Context, key string) ([]byte, error) {
+func (r *Redis) Get(ctx context.Context, key string) (string, error) {
 	res, err := r.client.Get(ctx, key).Result()
-	bytes := []byte(res)
-	return bytes, err
+	return res, err
 }
 
 func (r *Redis) Close() error {

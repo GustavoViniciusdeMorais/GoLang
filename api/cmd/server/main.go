@@ -41,8 +41,16 @@ func main() {
 	userService := service.NewUserService(userRepo)
 	userHandler := myhttp.NewUserHandler(userService)
 
+	authService := service.NewAuthService(userRepo)
+	authHandler := myhttp.NewAuthHandler(authService, cache)
+
 	server := myhttp.NewServer()
-	if err := server.RegisterRoutes(userHandler); err != nil {
+	err = server.RegisterRoutes(
+		cache,
+		userHandler,
+		authHandler,
+	)
+	if err != nil {
 		log.Fatal(err)
 	}
 	if err := server.Start(fmt.Sprintf("0.0.0.0:%s", config.HTTP.Port)); err != nil {

@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"example.com/internal/core/domain"
+	"example.com/internal/core/port"
 	"github.com/labstack/echo/v4"
 )
 
@@ -20,11 +21,17 @@ func NewServer() *EchoServer {
 }
 
 func (s *EchoServer) RegisterRoutes(
+	redisCache port.CacheRepository,
 	userHandler *UserHandler,
+	authHandler *AuthHandler,
 ) error {
 	s.echo.GET("/liveness", s.Liveness)
 
+	ag := s.echo.Group("/auth")
+	ag.POST("/login", authHandler.Login)
+
 	ug := s.echo.Group("/users")
+	ug.Use(JWTMiddleware(redisCache))
 	ug.GET("", userHandler.GetUsers)
 
 	return nil
