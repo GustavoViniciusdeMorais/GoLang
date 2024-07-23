@@ -9,7 +9,7 @@ type UserService struct {
 	repo port.UserRepository
 }
 
-func NewUserService(userRepo port.UserRepository) *UserService {
+func NewUserService(userRepo port.UserRepository) port.UserService {
 	return &UserService{repo: userRepo}
 }
 
@@ -18,8 +18,8 @@ func (s *UserService) CreateUser(name, email string) error {
 	return s.repo.Save(user)
 }
 
-func (s *UserService) GetUserByID(id uint) (*domain.User, error) {
-	return s.repo.FindByID(id)
+func (s *UserService) FindByEmail(email string) (*domain.User, error) {
+	return s.repo.FindByEmail(email)
 }
 
 func (s *UserService) ListUsers() ([]*domain.User, error) {

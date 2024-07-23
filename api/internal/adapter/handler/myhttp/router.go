@@ -29,6 +29,7 @@ func (s *EchoServer) RegisterRoutes(
 
 	ag := s.echo.Group("/auth")
 	ag.POST("/login", authHandler.Login)
+	ag.POST("/logout", authHandler.Logout)
 
 	ug := s.echo.Group("/users")
 	ug.Use(JWTMiddleware(redisCache))

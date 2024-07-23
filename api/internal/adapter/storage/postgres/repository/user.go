@@ -18,9 +18,9 @@ func (r *UserGormRepository) Save(user *domain.User) error {
 	return r.db.Create(user).Error
 }
 
-func (r *UserGormRepository) FindByID(id uint) (*domain.User, error) {
+func (r *UserGormRepository) FindByEmail(email string) (*domain.User, error) {
 	var user domain.User
-	result := r.db.First(&user, id)
+	result := r.db.Where("email = ?", email).First(&user)
 	if result.Error != nil {
 		return nil, result.Error
 	}

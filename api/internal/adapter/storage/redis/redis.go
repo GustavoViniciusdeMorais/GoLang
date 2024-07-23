@@ -23,6 +23,10 @@ func (r *Redis) Get(ctx context.Context, key string) (string, error) {
 	return res, err
 }
 
+func (r *Redis) Delete(ctx context.Context, key string) error {
+	return r.client.Del(ctx, key).Err()
+}
+
 func (r *Redis) Close() error {
 	return r.client.Close()
 }

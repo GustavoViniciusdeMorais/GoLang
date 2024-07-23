@@ -30,3 +30,12 @@ psql -U postgres -d gopos -f /var/lib/postgresql/data/database.sql
 
 redis-cli -a yourpassword
 ```
+
+### Requests
+```sh
+curl --request POST localhost:8082/auth/login -H "Content-Type: application/json" -d '{"email":"admin@example.com", "password":"user_pass"}'
+
+curl --request POST localhost:8082/auth/logout -H "Content-Type: application/json" -d '{"email":"admin@example.com"}'
+
+curl --request GET localhost:8082/users -H "Authorization: Bearer $JWT"
+```
