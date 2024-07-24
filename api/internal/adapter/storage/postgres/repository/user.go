@@ -27,9 +27,13 @@ func (r *UserGormRepository) FindByEmail(email string) (*domain.User, error) {
 	return &user, nil
 }
 
-func (r *UserGormRepository) FindAll() ([]*domain.User, error) {
+func (r *UserGormRepository) FindAll(pagination *domain.Pagination) ([]*domain.User, error) {
 	var users []*domain.User
-	result := r.db.Find(&users)
+	result := r.db.Model(&domain.User{}).
+		Select("name, email, age").
+		Offset(pagination.Offset).
+		Limit(pagination.LimitInt).
+		Scan(&users)
 	if result.Error != nil {
 		return nil, result.Error
 	}

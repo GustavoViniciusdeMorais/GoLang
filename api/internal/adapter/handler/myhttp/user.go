@@ -16,7 +16,9 @@ func NewUserHandler(userService port.UserService) *UserHandler {
 }
 
 func (h *UserHandler) GetUsers(ctx echo.Context) error {
-	users, error := h.userService.ListUsers()
+	page := ctx.QueryParam("page")
+	limit := ctx.QueryParam("limit")
+	users, error := h.userService.ListUsers(page, limit)
 
 	if error != nil {
 		return ctx.JSON(http.StatusInternalServerError, error)

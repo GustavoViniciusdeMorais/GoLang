@@ -22,8 +22,10 @@ func (s *UserService) FindByEmail(email string) (*domain.User, error) {
 	return s.repo.FindByEmail(email)
 }
 
-func (s *UserService) ListUsers() ([]*domain.User, error) {
-	return s.repo.FindAll()
+func (s *UserService) ListUsers(page string, limit string) ([]*domain.User, error) {
+	pagination := domain.NewPagination(page, limit)
+	pagination = pagination.CalculatePagination()
+	return s.repo.FindAll(pagination)
 }
 
 func (s *UserService) DeleteUser(id uint) error {
