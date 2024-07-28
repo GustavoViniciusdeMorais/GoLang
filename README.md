@@ -38,4 +38,8 @@ curl --request POST localhost:8082/auth/login -H "Content-Type: application/json
 curl --request POST localhost:8082/auth/logout -H "Content-Type: application/json" -d '{"email":"admin@example.com"}'
 
 curl --request GET localhost:8082/users\?page\=1\&limit\=10 -H "Authorization: Bearer $JWT"
+
+curl --request POST localhost:8082/users -H "Authorization: Bearer $JWT" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Client1", "email":"client1@example.com", "password":"user_pass", "birthday":"1980-01-01"}'
 ```

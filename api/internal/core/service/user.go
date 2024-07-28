@@ -1,6 +1,9 @@
 package service
 
 import (
+	os "os"
+	"strconv"
+
 	"example.com/internal/core/domain"
 	"example.com/internal/core/port"
 )
@@ -13,9 +16,24 @@ func NewUserService(userRepo port.UserRepository) port.UserService {
 	return &UserService{repo: userRepo}
 }
 
-func (s *UserService) CreateUser(name, email string) error {
-	user := &domain.User{Name: name, Email: email}
-	return s.repo.Save(user)
+func (s *UserService) CreateUser(name string, email string, birthday string, password string) (*domain.User, error) {
+	qtyUsers, err := s.repo.Count()
+	if err != nil {
+		return nil, err
+	}
+	users_limit, err := strconv.ParseInt(os.Getenv("USERS_LIMIT"), 10, 64)
+	if err != nil {
+		panic(err)
+	}
+	if qtyUsers >= users_limit {
+		return nil, nil
+	}
+	user := &domain.User{Name: name, Email: email, Birthday: birthday, Password: password, Active: false}
+	user, err = s.repo.Save(user)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }
 
 func (s *UserService) FindByEmail(email string) (*domain.User, error) {

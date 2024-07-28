@@ -22,6 +22,7 @@ services:
             - REDIS_PASSWORD=r3d1s@
             - REDIS_HOST=redis
             - REDIS_PORT=6379
+            - USERS_LIMIT=10
         command: export PATH=$PATH:/usr/local/go/bin
         depends_on:
             - postgres
