@@ -35,6 +35,8 @@ redis-cli -a yourpassword
 ```sh
 curl --request POST localhost:8082/auth/login -H "Content-Type: application/json" -d '{"email":"admin@example.com", "password":"user_pass"}'
 
+JWT=created token
+
 curl --request POST localhost:8082/auth/logout -H "Content-Type: application/json" -d '{"email":"admin@example.com"}'
 
 curl --request GET localhost:8082/users\?page\=1\&limit\=10 -H "Authorization: Bearer $JWT"

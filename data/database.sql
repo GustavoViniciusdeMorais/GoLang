@@ -9,4 +9,5 @@ CREATE TABLE IF NOT EXISTS users (
     active BOOLEAN DEFAULT false,
 );
 
-INSERT INTO users (name, email, birthday, password, active) VALUES ('Admin User', 'admin@example.com', '1980-01-01', true, 'admin123');
+INSERT INTO users (name, email, birthday, password, active)
+VALUES ('Admin User', 'admin@example.com', '1980-01-01', '$2a$14$ozETnrP2tD5o1dU85MHT6.nHZmvN1Z7DsxWvYBnO4V5rAo4RZNwzG', TRUE);

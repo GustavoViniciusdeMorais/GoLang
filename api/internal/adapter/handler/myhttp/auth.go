@@ -7,6 +7,7 @@ import (
 	"example.com/internal/core/port"
 	jwt "github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthHandler struct {
@@ -29,9 +30,14 @@ func (a *AuthHandler) Login(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, echo.Map{"error": "Invalid request"})
 	}
 
-	user, err := a.authService.Login(loginRequest.Email, loginRequest.Password)
+	user, err := a.authService.FindByEmail(loginRequest.Email)
 	if err != nil {
-		return ctx.JSON(http.StatusUnauthorized, map[string]string{"error": "Invalid username or password"})
+		return ctx.JSON(http.StatusUnauthorized, map[string]string{"error": "Invalid email"})
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(loginRequest.Password))
+	if err != nil {
+		return ctx.JSON(http.StatusUnauthorized, map[string]string{"error": "Invalid password"})
 	}
 
 	userToken, err := a.CreateToken(user.Email)

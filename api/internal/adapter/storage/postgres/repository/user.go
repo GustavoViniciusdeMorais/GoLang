@@ -15,7 +15,7 @@ func NewUserGormRepository(db *gorm.DB) port.UserRepository {
 }
 
 func (r *UserGormRepository) Save(user *domain.User) (*domain.User, error) {
-	err := r.db.Create(user).Error
+	err := r.db.Create(&user).Error
 	if err != nil {
 		return nil, err
 	}
