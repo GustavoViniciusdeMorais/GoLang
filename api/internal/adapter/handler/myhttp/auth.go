@@ -35,6 +35,10 @@ func (a *AuthHandler) Login(ctx echo.Context) error {
 		return ctx.JSON(http.StatusUnauthorized, map[string]string{"error": "Invalid email"})
 	}
 
+	if !user.Active {
+		return ctx.JSON(http.StatusUnauthorized, map[string]string{"error": "User is not active"})
+	}
+
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(loginRequest.Password))
 	if err != nil {
 		return ctx.JSON(http.StatusUnauthorized, map[string]string{"error": "Invalid password"})
