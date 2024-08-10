@@ -16,7 +16,7 @@ func NewUserService(userRepo port.UserRepository) port.UserService {
 	return &UserService{repo: userRepo}
 }
 
-func (s *UserService) CreateUser(name string, email string, birthday string, password string) (*domain.User, error) {
+func (s *UserService) Save(name string, email string, birthday string, password string) (*domain.User, error) {
 	qtyUsers, err := s.repo.Count()
 	if err != nil {
 		return nil, err
@@ -40,12 +40,25 @@ func (s *UserService) FindByEmail(email string) (*domain.User, error) {
 	return s.repo.FindByEmail(email)
 }
 
-func (s *UserService) ListUsers(page string, limit string) ([]*domain.User, error) {
+func (s *UserService) FindById(id int64) (*domain.User, error) {
+	return s.repo.FindById(id)
+}
+
+func (s *UserService) FindAll(page string, limit string) ([]*domain.User, error) {
 	pagination := domain.NewPagination(page, limit)
 	pagination = pagination.CalculatePagination()
 	return s.repo.FindAll(pagination)
 }
 
-func (s *UserService) DeleteUser(id uint) error {
+func (s *UserService) Delete(id int64) error {
 	return s.repo.Delete(id)
+}
+
+func (s *UserService) Update(id int, name string, email string, birthday string, password string, active bool) (*domain.User, error) {
+	user := &domain.User{ID: id, Name: name, Email: email, Birthday: birthday, Password: password, Active: active}
+	user, err := s.repo.Update(user)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }

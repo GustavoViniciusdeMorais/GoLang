@@ -31,6 +31,15 @@ func (r *UserGormRepository) FindByEmail(email string) (*domain.User, error) {
 	return &user, nil
 }
 
+func (r *UserGormRepository) FindById(id int64) (*domain.User, error) {
+	var user domain.User
+	result := r.db.Where("id = ?", id).First(&user)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &user, nil
+}
+
 func (r *UserGormRepository) FindAll(pagination *domain.Pagination) ([]*domain.User, error) {
 	var users []*domain.User
 	result := r.db.Model(&domain.User{}).
@@ -44,7 +53,7 @@ func (r *UserGormRepository) FindAll(pagination *domain.Pagination) ([]*domain.U
 	return users, nil
 }
 
-func (r *UserGormRepository) Delete(id uint) error {
+func (r *UserGormRepository) Delete(id int64) error {
 	return r.db.Delete(&domain.User{}, id).Error
 }
 
@@ -63,4 +72,14 @@ func (r *UserGormRepository) Count() (int64, error) {
 		return 0, err
 	}
 	return count, nil
+}
+
+func (r *UserGormRepository) Update(user *domain.User) (*domain.User, error) {
+	err := r.db.Model(&domain.User{}).
+		Where("id = ?", user.ID).
+		Updates(&user).Error
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }

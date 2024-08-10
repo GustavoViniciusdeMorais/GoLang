@@ -35,6 +35,7 @@ func (s *EchoServer) RegisterRoutes(
 	ug.Use(JWTMiddleware(redisCache))
 	ug.GET("", userHandler.GetUsers)
 	ug.POST("", userHandler.CreateUser)
+	ug.PUT("/:id", userHandler.UpdateUser)
 
 	return nil
 }
