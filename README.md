@@ -14,6 +14,7 @@ export PATH=$PATH:/usr/local/go/bin
 	- go get github.com/go-gorm/postgres
 - [Redis](https://github.com/redis/go-redis)
   - go get github.com/redis/go-redis/v9
+- [Swagger](./swagger.md)
 
 ### Database configuration
 ```sh

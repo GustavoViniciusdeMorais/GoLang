@@ -24,6 +24,15 @@ type LogoutRequest struct {
 	Email string `json:"email"`
 }
 
+// @Summary Login
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param request body LoginRequest true "Login request"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /auth/login [post]
 func (a *AuthHandler) Login(ctx echo.Context) error {
 	var loginRequest LoginRequest
 	if err := ctx.Bind(&loginRequest); err != nil {
@@ -57,6 +66,15 @@ func (a *AuthHandler) Login(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, map[string]string{"token": userToken})
 }
 
+// @Summary Logout
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param request body LogoutRequest true "Logout request"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /auth/logout [post]
 func (a *AuthHandler) Logout(ctx echo.Context) error {
 	var logoutRequest LogoutRequest
 	if err := ctx.Bind(&logoutRequest); err != nil {

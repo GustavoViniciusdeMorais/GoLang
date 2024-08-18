@@ -4,9 +4,11 @@ import (
 	"log"
 	"net/http"
 
+	_ "example.com/docs"
 	"example.com/internal/core/domain"
 	"example.com/internal/core/port"
 	"github.com/labstack/echo/v4"
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 type EchoServer struct {
@@ -25,6 +27,8 @@ func (s *EchoServer) RegisterRoutes(
 	userHandler *UserHandler,
 	authHandler *AuthHandler,
 ) error {
+	s.echo.GET("/swagger/*", echoSwagger.WrapHandler)
+
 	s.echo.GET("/liveness", s.Liveness)
 
 	ag := s.echo.Group("/auth")

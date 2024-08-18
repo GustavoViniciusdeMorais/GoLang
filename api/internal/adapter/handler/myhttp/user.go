@@ -17,6 +17,13 @@ func NewUserHandler(userService port.UserService) *UserHandler {
 	return &UserHandler{userService: userService}
 }
 
+// @Summary Get all users
+// @Description Get all users
+// @Tags user
+// @Accept json
+// @Produce json
+// @Success 200 {object} []domain.User
+// @Router /users [get]
 func (h *UserHandler) GetUsers(ctx echo.Context) error {
 	page := ctx.QueryParam("page")
 	limit := ctx.QueryParam("limit")
@@ -37,6 +44,14 @@ type UserRequest struct {
 	Active   bool   `json:"active"`
 }
 
+// @Summary Create user
+// @Description Create user
+// @Tags user
+// @Accept json
+// @Produce json
+// @Param user body UserRequest true "User"
+// @Success 200 {object} domain.User
+// @Router /users [post]
 func (h *UserHandler) CreateUser(ctx echo.Context) error {
 	req := new(UserRequest)
 	if err := ctx.Bind(req); err != nil {
@@ -55,6 +70,15 @@ func (h *UserHandler) CreateUser(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, user)
 }
 
+// @Summary Update user
+// @Description Update user
+// @Tags user
+// @Accept json
+// @Produce json
+// @Param id path int true "User ID"
+// @Param user body UserRequest true "User"
+// @Success 200 {object} domain.User
+// @Router /users/{id} [put]
 func (h *UserHandler) UpdateUser(ctx echo.Context) error {
 	id, err := strconv.ParseInt(ctx.Param("id"), 10, 32)
 	if err != nil {
